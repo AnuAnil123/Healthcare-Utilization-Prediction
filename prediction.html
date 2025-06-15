@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prediction</title>
+    <style>
+      body {
+
+        background-color: #1e90ff;
+        color: white;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      form {
+        max-width: 400px;
+        margin: auto;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        color: black;
+      }
+      label {
+        display: block;
+        margin-top: 15px;
+      }
+      input[type="text"] {
+        width: 95%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      button {
+        margin-top: 20px;
+        width: 100%;
+        background-color: #005cbf;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .flash {
+        color: yellow;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Prediction Page</h1>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="flash">{{ messages[0] }}</div>
+    {% endif %} {% endwith %}
+    <form method="post">
+      {% for feature in ['age_2014', 'TrtOrder', 'LogAssets',
+      'health_worker_provides_', 'HHmembers_12', 'health_program_', 'FPrimary',
+      'weight'] %}
+      <label for="{{ feature }}">{{ feature }}</label>
+      <input type="text" name="{{ feature }}" id="{{ feature }}" required />
+      {% endfor %}
+      <button type="submit">Predict</button>
+    </form>
+    <br />
+    <a href="{{ url_for('dashboard') }}" style="color: white"
+      >Back to Dashboard</a
+    >
+    |
+    <a href="{{ url_for('logout') }}" style="color: white">Logout</a>
+  </body>
+</html>
