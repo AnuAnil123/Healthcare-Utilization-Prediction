@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <style>
+      /* Reset and base */
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        height: 100vh;
+        background: linear-gradient(135deg, #0a1f44 0%, #001021 100%);
+        color: #e1e8f0;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 250px;
+        background-color: #071530;
+        padding: 20px;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar h2 {
+        color: #1e90ff;
+        margin-bottom: 40px;
+        text-align: center;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+      }
+
+      .tile {
+        background-color: #1e90ff;
+        color: white;
+        text-align: center;
+        padding: 15px 0;
+        border-radius: 10px;
+        margin-bottom: 25px; /* Space between buttons */
+        font-weight: 600;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+      }
+
+      .tile:hover {
+        background-color: #005cbf;
+      }
+
+      /* Main content */
+      .main-content {
+        flex-grow: 1;
+        background-color: rgba(10, 31, 68, 0.9);
+        overflow-y: auto;
+
+        /* Center content horizontally and vertically */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+      }
+
+      /* Container for the form + title */
+      #predictionContainer {
+        width: 100%;
+        max-width: 520px;
+        display: none; /* hidden by default */
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Prediction Title */
+      #predictionTitle {
+        color: #1e90ff;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-align: center;
+        font-size: 2rem;
+      }
+
+      /* Form styles */
+      form {
+        width: 100%;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        color: #cbd5e1;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-top: 6px;
+        border-radius: 5px;
+        border: 1px solid #30475e;
+        background-color: #122c62;
+        color: #e1e8f0;
+      }
+
+      input[type="text"]::placeholder {
+        color: #7a8ca3;
+      }
+
+      button {
+        margin-top: 25px;
+        width: 100%;
+        background-color: #1e90ff;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #005cbf;
+      }
+
+      /* Flash message */
+      .flash {
+        color: #ff6b6b;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+    </style>
+
+    <script>
+      function showPredictionForm() {
+        // Show container holding title and form
+        const container = document.getElementById("predictionContainer");
+        container.style.display = "flex";
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <h2>Dashboard</h2>
+      <div class="tile" onclick="showPredictionForm()">Prediction</div>
+      <a class="tile" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <div class="main-content">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="flash">{{ messages[0] }}</div>
+      {% endif %}
+      {% endwith %}
+
+      <div id="predictionContainer">
+        <h1 id="predictionTitle">Prediction</h1>
+
+        <form id="predictionForm" action="{{ url_for('prediction') }}" method="post">
+          {% for feature in ['age_2014', 'TrtOrder', 'LogAssets', 'health_worker_provides_', 'HHmembers_12', 'health_program_', 'FPrimary', 'weight'] %}
+          <label for="{{ feature }}">{{ feature }}</label>
+          <input
+            type="text"
+            name="{{ feature }}"
+            id="{{ feature }}"
+            placeholder="Enter {{ feature }}"
+            required
+          />
+          {% endfor %}
+          <button type="submit">Predict</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
